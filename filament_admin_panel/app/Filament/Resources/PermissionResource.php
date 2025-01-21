@@ -46,7 +46,6 @@ class PermissionResource extends Resource
                     ->sortable()
                     ->dateTime('d-M-Y')
                     ->searchable(),
-
             ])
             ->filters([
                 //
