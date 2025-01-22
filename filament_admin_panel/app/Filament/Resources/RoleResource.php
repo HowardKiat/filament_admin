@@ -26,6 +26,7 @@ class RoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-cog';
 
+    protected static ?string $navigationGroup = 'Admin Management';
     public static function form(Form $form): Form
     {
         return $form    
@@ -49,7 +50,8 @@ class RoleResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('name')->sortable()->searchable(),
-                TextColumn::make('created_at')
+                TextColumn::make('created_at'),
+                TextColumn::make('deleted_at')
                     ->sortable()
                     ->dateTime('d-M-Y')
                     ->searchable(),
