@@ -2,23 +2,31 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Policies\RolePolicy;  
+use App\Policies\PermissionPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * Register services.
+     * The policy mappings for the application.
+     *
+     * @var array
      */
-    public function register(): void
-    {
-        //
-    }
+    protected $policies = [
+        Permission::class => PermissionPolicy::class,
+        Role::class => RolePolicy::class,
+    ];
 
     /**
-     * Bootstrap services.
+     * Register any authentication / authorization services.
+     *
+     * @return void
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }
