@@ -9,8 +9,6 @@ use Filament\Facades\Filament;
 use Illuminate\Support\ServiceProvider;
 use Filament\Navigation\MenuItem;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Contracts\Role;
-use Spatie\Permission\Contracts\Permission;
 use Illuminate\Support\Facades\Log;
 
 class FilamentServiceProvider extends ServiceProvider
@@ -33,44 +31,45 @@ class FilamentServiceProvider extends ServiceProvider
     public function boot()
     {
         Filament::serving(function () {
+            // Filament::registerViteTheme('resources/css/filament.css');
+
             try {
                 $user = Auth::user();
 
-                //Indepth Checking
-                if ($user && 
-                    $user->is_admin === 1 && 
-                    $this->userHasAdminRoles($user)
-                ) {
+                // Validate if the user exists and has admin privileges
+                if ($user && $this->isAdmin($user)) {
                     $this->registerAdminMenuItems();
                 }
             } catch (\Exception $e) {
-                // Log any unexpected errors
+                // Log unexpected errors
                 Log::error('Error in Filament menu registration: ' . $e->getMessage());
             }
         });
     }
 
     /**
-     * Check if the user has any admin-level roles
-     * 
+     * Check if the user has admin privileges.
+     *
      * @param mixed $user
      * @return bool
      */
-    protected function userHasAdminRoles($user): bool
+    protected function isAdmin($user): bool
     {
         if (!method_exists($user, 'hasAnyRole')) {
             return false;
         }
 
-        return $user->hasAnyRole([
-            'super-admin', 
-            'admin', 
-            'moderator'
+        return $user->is_admin === 1 && $user->hasAnyRole([
+            'super-admin',
+            'admin',
+            'moderator',
         ]);
     }
 
     /**
-     * Register admin-specific menu items
+     * Register admin-specific menu items in the Filament navigation.
+     *
+     * @return void
      */
     protected function registerAdminMenuItems(): void
     {
