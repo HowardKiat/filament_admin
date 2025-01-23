@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -21,11 +22,6 @@ class User extends Authenticatable
     use SoftDeletes;
     use TwoFactorAuthenticatable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'is_admin',
@@ -33,11 +29,6 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -45,20 +36,10 @@ class User extends Authenticatable
         'two_factor_secret',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
     protected $appends = [
         'profile_photo_url',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -67,14 +48,13 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Check if the user has any of the specified roles.
-     *
-     * @param array|string $roles
-     * @return bool
-     */
-    public function hasAnyRole($roles): bool
+    public function canAccessFilament(): bool
     {
-        return in_array($this->role, $roles);
+        return str_ends_with($this->email, '@admin.com');
+    }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@admin.com');
     }
 }
