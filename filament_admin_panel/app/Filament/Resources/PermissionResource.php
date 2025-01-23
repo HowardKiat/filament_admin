@@ -14,7 +14,7 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 class PermissionResource extends Resource
 {
     protected static ?string $model = Permission::class;
@@ -27,7 +27,7 @@ class PermissionResource extends Resource
     {
         return $form    
             ->schema([
-                Card::make()
+                Section::make()
                     ->schema([
                         TextInput::make('name')
                             ->unique() 
