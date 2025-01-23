@@ -15,10 +15,12 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\MultiSelect;
+// use Filament\Forms\Components\Card;
+// use Filament\Forms\Components\MultiSelect;
 use Filament\Resources\RelationManagers\RelationManager;
 use App\Filament\Resources\RoleResource\RelationManagers\PermissionsRelationManager;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select; 
 
 class RoleResource extends Resource
 {
@@ -31,12 +33,12 @@ class RoleResource extends Resource
     {
         return $form    
             ->schema([
-                Card::make()
+                Section::make()
                     ->schema([
                         TextInput::make('name')
                             ->unique(ignoreRecord: true) 
                             ->required(),   
-                        MultiSelect::make('permissions')
+                        Select::make('permissions')
                             ->relationship('permissions', 'name')
                             ->preload() 
                             ->required()
